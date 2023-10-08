@@ -1,0 +1,66 @@
+Função AvaliarIndivíduos(População):
+	Para cada i de 1 até População.size:
+		Avaliação(População[i])
+
+Função Avaliação(indivíduo):
+    indivíduo.fitness = objetivo(indivíduo)
+    Retorne indivíduo
+
+Função InicializaçãoPopulação(tamanho_população, dimensão):
+    População = []
+    Para cada i de 1 até tamanho_população:
+        Indivíduo = GerarIndivíduoAleatório(dimensão)
+        Adicionar Indivíduo à População
+    Retorne População
+
+Função GerarIndivíduoAleatório(dimensão):
+    Indivíduo = []
+    Para cada i de 1 até dimensão:
+        Gene = ValorAleatório(ParametroGlobal)
+        Indivíduo.copy(Gene)
+    Retorne Indivíduo
+
+GerarNovaPopulação(População, Sigma,::Media,::Covariancia): --> Em python         populacao = np.random.multivariate_normal(media, covariancia, tamanho_populacao)
+
+	# Decomposição de Cholesky da matriz de covariância
+	L = DecomposicaoCholesky(covariancia)
+
+	# Inicializa o vetor de amostras
+	PopulaçãoNova = []
+
+	Para cada i de 1 até População:
+    		# Gere um vetor de números aleatórios independentes (média 0 e variância 1)
+    		numeros_aleatorios = GerarNumerosAleatoriosNormaisIndependentes(dimensao)
+
+    		# Transformação linear para obter as amostras MVN
+    		vetorUni = media + L * numeros_aleatorios
+    
+    		Adicione vetorUni ao PopulaçãoNova
+
+	Retorne PopulaçãoNova
+
+Função CMA_ES(dimensão, tamanho_população, número_gerações):
+    População = InicializaçãoPopulação(tamanho_população, dimensão)
+
+    Para cada geração de 1 até número_gerações:
+        AvaliarIndivíduos(População) // Avalie a aptidão de cada indivíduo
+
+        OrdenarPopulaçãoPorAptidãoNaDimensão(População)
+
+        SelecionarMelhoresIndivíduos(População, tamanho_população/2)
+
+        AtualizarMédia(População, tamanho_população/2) // Atualize a média ponderada dos melhores indivíduos
+
+        AtualizarCovariância(População, tamanho_população//2) // Atualize a matriz de covariância
+
+        Sigma = AtualizarSigma(Sigma) // Atualize o parâmetro de escala Sigma
+
+        GerarNovaPopulação(População, Sigma,::Media,::Covariancia) // Amostra uma nova população com base nos parâmetros atualizados
+
+    MelhorIndivíduo = MelhorIndivíduoNaPopulação(População) // Encontre o melhor indivíduo após as gerações
+
+    Retorne MelhorIndivíduo
+
+Global Variables:
+objetivo= config.ini(objetivo)
+Sigma = config.ini(sigma)
