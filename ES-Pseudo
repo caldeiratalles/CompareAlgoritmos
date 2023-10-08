@@ -1,0 +1,43 @@
+Função Avaliação(indivíduo,objetivo):
+    indivíduo.fitness = objetivo(indivíduo)
+    Retorne indivíduo
+
+Função InicializaçãoPopulação(tamanho_população):
+    População = []
+    Para cada i de 1 até tamanho_população:
+        Indivíduo = GerarIndivíduoAleatório()
+        Adicionar Indivíduo à População
+    Retorne População
+
+Função Mutação(indivíduo):
+    Genes = []
+    Genes = indivíduo.pegarGenesBytes()
+    Para cada i de 1 até Genes.size/2:
+	Genes[i] = randomicoValor()
+    Retorne NovoIndivíduo(Genes)
+
+Função Seleção(População):
+    NovaPopulação = []
+    BestInd = População.best()
+    Para cada i de 1 até População.size:
+	Se BestInd >= População[i]:
+		BestInd = População[i]
+        	NovaPopulação.add(População[i])
+	NovaPopulação.add(Mutação(População[i]))
+    Retorne NovaPopulação
+
+TamanhoPopulação = 100
+NúmeroGerações = 100
+
+População = InicializaçãoPopulação(TamanhoPopulação)
+
+Para cada geração de 1 até NúmeroGerações:
+    Para cada indivíduo na População:
+        Avaliar o Indivíduo
+    NovaPopulação = Seleção(População)
+    Para cada indivíduo na NovaPopulação:
+        Mutação(indivíduo)
+    População = NovaPopulação
+
+MelhorIndivíduo = EncontrarMelhorIndivíduo(População)
+Exibir MelhorIndivíduo
